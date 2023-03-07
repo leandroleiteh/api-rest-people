@@ -1,0 +1,5 @@
+package com.attornatus.teste.model;
+
+public class Pessoa {
+
+}

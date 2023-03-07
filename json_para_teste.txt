@@ -1,0 +1,8 @@
+{
+    "nome" : "Pedro",
+    "dataNascimento" : "29052001",
+    "endereco" : "Rua Luiz Rotta",
+    "numeroCasa" : "498",
+    "cep" : "04836500",
+    "cidade" : "São Paulo"
+}

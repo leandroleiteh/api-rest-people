@@ -1,0 +1,5 @@
+package com.attornatus.teste.repository;
+
+public interface PessoaRepository {
+
+}
