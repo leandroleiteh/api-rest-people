@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.attornatus.teste.PessoaService;
 import com.attornatus.teste.model.Pessoa;
 import com.attornatus.teste.repository.PessoaRepository;
 
@@ -28,6 +29,9 @@ public class PessoaController {
 
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Autowired
+	private PessoaService pessoaService;
 
 	@GetMapping
 	public List<Pessoa> listar() {
@@ -40,11 +44,14 @@ public class PessoaController {
 		return pessoaRepository.save(pessoa);
 	}
 	
-//	@PutMapping("/pessoas/{id}")
-//	public Pessoa editar(@PathVariable Long id, @RequestBody Pessoa pessoa) {
-//		Pessoa pessoaAtual = pessoaRepository.findById(id).get();
-//		BeanUtils.copyProperties(pessoa, pessoaAtual, "id");
-//		return pessoaRepository.save(pessoaAtual);
-//	}
-	
+	@PutMapping("/products/{id}")
+	public ResponseEntity<Pessoa> updatePessoa(@PathVariable(value = "id") Long id, @RequestBody Pessoa pessoa) {
+		Optional<Pessoa> pessoaO = pessoaRepository.findById(id);
+		if (pessoaO.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		pessoa.setId(pessoaO.get().getId());
+		return new ResponseEntity<Pessoa>(pessoaRepository.save(pessoa), HttpStatus.OK);
+	}
+
 }

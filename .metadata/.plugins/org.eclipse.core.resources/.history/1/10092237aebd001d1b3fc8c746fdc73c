@@ -1,0 +1,18 @@
+package com.attornatus.teste;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.attornatus.teste.model.Pessoa;
+import com.attornatus.teste.repository.PessoaRepository;
+
+public class PessoaService {
+
+	@Autowired
+	PessoaRepository pessoarepository;
+
+	public Pessoa pessoaFindById(Long id) {
+		return pessoarepository.findById(id).get();
+	}
+}

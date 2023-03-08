@@ -1,0 +1,24 @@
+package com.attornatus.teste.repository;
+
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.attornatus.teste.model.Pessoa;
+
+import jakarta.persistence.Id;
+
+
+public interface PessoaRepository extends JpaRepository<Pessoa, Id> {
+
+	Optional<Pessoa> findById(Long id);
+
+    
+
+		
+	}
+		
+
+	
+	
+	
