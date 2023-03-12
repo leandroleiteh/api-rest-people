@@ -1,0 +1,25 @@
+package com.attornatus.teste.model;
+
+
+@Data
+@Entity
+@Table(name = "TB_PESSOA")
+public class PessoaModel {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Id id;
+	@Column(nullable = false)
+	private String nome;
+	@Column(nullable = false)
+	private String dataNascimento;
+	@Column(nullable = false, length = 70)
+	private String endereco;
+	@Column(nullable = false, length = 10)
+	private String numeroCasa;
+	@Column(nullable = false, length = 8)
+	private String cep;
+	@Column(nullable = false, length = 30)
+	private String cidade;
+
+}

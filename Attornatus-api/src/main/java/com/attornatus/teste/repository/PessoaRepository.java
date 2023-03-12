@@ -1,16 +1,20 @@
 package com.attornatus.teste.repository;
 
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.attornatus.teste.model.Pessoa;
+import org.springframework.stereotype.Repository;
+
+import com.attornatus.teste.model.PessoaModel;
 
 import jakarta.persistence.Id;
 
+@Repository
+public interface PessoaRepository extends JpaRepository<PessoaModel, Id> {
 
-public interface PessoaRepository extends JpaRepository<Pessoa, Id> {
-
-
-    
+	boolean existsBynome(String nome);
+	
+	    
 
 		
 	}

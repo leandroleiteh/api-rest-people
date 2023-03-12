@@ -1,0 +1,22 @@
+package com.attornatus.teste.dtos;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class PessoaDto {
+
+	@NotBlank
+	private String nome;
+	@NotBlank
+	private String dataNascimento;
+	@NotBlank
+	private String endereco;
+	@NotBlank
+	private String numeroCasa;
+	@NotBlank
+	@Size(max = 8)
+	private String cep;
+	@NotBlank
+	private String cidade;
+}

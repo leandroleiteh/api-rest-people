@@ -1,11 +1,14 @@
 package com.attornatus.teste.controller;
 
 import java.util.List;
+//import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,41 +20,59 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.attornatus.teste.PessoaService;
-import com.attornatus.teste.model.Pessoa;
+import com.attornatus.teste.dtos.PessoaDto;
+import com.attornatus.teste.model.PessoaModel;
 import com.attornatus.teste.repository.PessoaRepository;
+import com.attornatus.teste.service.PessoaService;
 
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
+import jakarta.persistence.Id;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/pessoas")
 public class PessoaController {
 
-	@Autowired
-	private PessoaRepository pessoaRepository;
-	
-	@Autowired
-	private PessoaService pessoaService;
+	final PessoaService pessoaService;
 
-	@GetMapping
-	public List<Pessoa> listar() {
-		return pessoaRepository.findAll();
+	public PessoaController(PessoaService pessoaService) {
+		this.pessoaService = pessoaService;
 	}
+
+//	@GetMapping
+//	public List<PessoaModel> listar() {S
+//		return pessoaRepository.findAll();
+//	}
+//	
+//	@PostMapping
+//	@ResponseStatus(HttpStatus.CREATED)
+//	public PessoaModel criar(@RequestBody PessoaModel pessoa) {
+//		return pessoaRepository.save(pessoa);
+//	}
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public Pessoa criar(@RequestBody Pessoa pessoa) {
-		return pessoaRepository.save(pessoa);
-	}
-	
-	@PutMapping("/products/{id}")
-	public ResponseEntity<Pessoa> updatePessoa(@PathVariable(value = "id") Long id, @RequestBody Pessoa pessoa) {
-		Optional<Pessoa> pessoaO = pessoaRepository.findById(id);
-		if (pessoaO.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<Object> savePessoa(@RequestBody @Valid PessoaDto pessoaDto) {
+		if (pessoaService.existsBynome(pessoaDto.getNome())) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Nome está sendo usado!");
 		}
-		pessoa.setId(pessoaO.get().getId());
-		return new ResponseEntity<Pessoa>(pessoaRepository.save(pessoa), HttpStatus.OK);
+		var pessoaModel = new PessoaModel();
+		BeanUtils.copyProperties(pessoaDto, pessoaModel);
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.save(pessoaModel));
 	}
+
+	@GetMapping
+	public ResponseEntity<List<PessoaModel>> getAllPessoa() {
+		return ResponseEntity.status(HttpStatus.OK).body(pessoaService.findAll());
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Object> getOnePessoa(@PathVariable(value = "id") Long id){
+		Optional<PessoaModel> pessoaModelOptional = pessoaService.findById(id);
+		if(!pessoaModelOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NOT FOUND: Pessoa não existe");
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(pessoaModelOptional.get());
+	}	
 
 }
